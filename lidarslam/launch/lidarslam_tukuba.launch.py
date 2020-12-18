@@ -18,7 +18,7 @@ def generate_launch_description():
         package='scanmatcher',
         executable='scanmatcher_node',
         parameters=[main_param_dir],
-        remappings=[('/input_cloud','/points_raw')],
+        remappings=[('/input_cloud','/velodyne_points')],
         output='screen'
         )
 
@@ -29,6 +29,11 @@ def generate_launch_description():
         output='screen'
         )
 
+    tf = launch_ros.actions.Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        arguments=['0','0','0','0','0','0','1','base_link','velodyne_link']
+        )
 
     return launch.LaunchDescription([
         launch.actions.DeclareLaunchArgument(
@@ -37,4 +42,5 @@ def generate_launch_description():
             description='Full path to main parameter file to load'),
         mapping,
         graphbasedslam,
+        tf
             ])
